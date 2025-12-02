@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 
 import Image from "next/image";
-import logo from "../../../../app/assets/images/logo.svg"
+import logo from "../../../../app/assets/images/logo1.png"
 import { registerUser } from "@/src/services/AuthService";
 import NLButton from "@/components/ui/core/button/NlButton";
 

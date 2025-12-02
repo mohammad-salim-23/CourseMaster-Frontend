@@ -16,7 +16,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 import z from "zod";
 import Image from "next/image";
-import logo from "../../../../app/assets/images/logo.svg";
+import logo from "../../../../app/assets/images/logo1.png";
 import { loginUser } from "@/src/services/AuthService";
 import NLButton from "@/components/ui/core/button/NlButton";
 
