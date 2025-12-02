@@ -186,24 +186,40 @@ const RegisterForm = ()=>{
 
                         {/* Register Button and Link */}
                         <div className="pt-4">
-                            <NLButton
-                                variant="primary"
-                                className="w-full bg-[#0d6efd] hover:bg-teal-700 text-white transition-colors rounded-lg" // Changed hover color slightly
-                                disabled={!!confirmPassword && password !== confirmPassword}
-                                type="submit"
-                            >
-                                {form.formState.isSubmitting ? "Registering..." : "Register Now"}
-                            </NLButton>
-                            <p className="text-center text-sm mt-4 text-gray-600">
-                                Already have an account?{" "}
-                                <Link
-                                    href="/login"
-                                    className="text-[#0d6efd] font-semibold hover:text-teal-700 transition-colors" 
-                                >
-                                    Login Now
-                                </Link>
-                            </p>
-                        </div>
+  <div className="relative group w-full">
+    <NLButton
+      className={`w-full bg-[#0d6efd] hover:bg-teal-700 text-white transition-colors rounded-lg 
+        ${password && confirmPassword && password !== confirmPassword ? "opacity-50 cursor-not-allowed" : ""}
+      `}
+      disabled={!!confirmPassword && password !== confirmPassword}
+      type="submit"
+    >
+      {form.formState.isSubmitting ? "Registering..." : "Register Now"}
+    </NLButton>
+
+    {/* Tooltip */}
+    {password && confirmPassword && password !== confirmPassword && (
+      <span className="absolute left-1/2 -translate-x-1/2 -top-10 
+        bg-red-500 text-white text-xs px-3 py-1 rounded shadow-lg
+        opacity-0 group-hover:opacity-100 transition-opacity duration-300
+        pointer-events-none
+      ">
+        Passwords do not match
+      </span>
+    )}
+  </div>
+
+  <p className="text-center text-sm mt-4 text-gray-600">
+    Already have an account?{" "}
+    <Link
+      href="/login"
+      className="text-teal-600 font-semibold hover:text-teal-700 transition-colors"
+    >
+      Login Now
+    </Link>
+  </p>
+</div>
+
 
                        </form>
                     </Form>

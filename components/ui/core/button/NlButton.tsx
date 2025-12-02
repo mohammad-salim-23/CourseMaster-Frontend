@@ -17,7 +17,7 @@ const NLButton = ({
     "px-3 py-2 rounded font-medium transition duration-300 text-sm cursor-pointer";
 
   const variantStyles = {
-    primary: "bg-primary-500 hover:bg-primary-600 text-white",
+    primary: "bg-teal-500 hover:bg-teal-600 text-white",
     secondary: "bg-gray-600 hover:bg-gray-700 text-white",
     outline: "bg-transparent border border-gray-300 text-gray-600",
   };

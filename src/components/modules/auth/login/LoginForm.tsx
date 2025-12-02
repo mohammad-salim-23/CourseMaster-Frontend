@@ -146,7 +146,7 @@ const LoginForm = () => {
             <div className="pt-4">
               <NLButton
                 variant="primary"
-                className="w-full bg-[#0d6efd] hover:bg-blue-700 text-white  text-xl font-bold rounded-lg transition-colors"
+                className="w-full bg-[#0d6efd] hover:bg-teal-700 text-white  text-xl font-bold rounded-lg transition-colors"
                 type="submit"
               >
                 {form.formState.isSubmitting ? "Logging in..." : "Login Now"}
@@ -156,7 +156,7 @@ const LoginForm = () => {
                 Don't have an account?{" "}
                 <Link
                   href="/register"
-                  className="text-[#0d6efd] font-semibold hover:text-blue-700 transition-colors"
+                  className="text-teal-600 font-semibold hover:text-teal-700 transition-colors"
                 >
                   Create New Account
                 </Link>
