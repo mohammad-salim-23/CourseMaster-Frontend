@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { LogOut, LogIn, ChevronDown, Menu, Search, FileText } from "lucide-react";
 
 import { getCurrentUser, logout } from "@/src/services/AuthService";
-import logo from "../../app/assets/images/logo1.png";
-import avatar from "../../app/assets/images/Avatar.png";
+import logo from "../../../../app/assets/images/logo1.png";
+import avatar from "../../../../app/assets/images/Avatar.png";
 
 const Navbar = () => {
   const router = useRouter();
