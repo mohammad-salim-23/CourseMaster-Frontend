@@ -11,15 +11,22 @@ import avatar from "../../app/assets/images/Avatar.png";
 
 const Navbar = () => {
   const router = useRouter();
+
   const [user, setUser] = useState<any>(null); 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleRedirect = (path: string) => router.push(path);
+  const handleRedirect = (path: string) => {
+    setIsDropdownOpen(false); 
+    setIsMobileMenuOpen(false);
+    router.push(path);
+  };
 
   const handleLogout = async () => {
     await logout();
     setUser(null);
+    setIsDropdownOpen(false);
+    setIsMobileMenuOpen(false);
     router.push("/login");
   };
 
@@ -32,8 +39,12 @@ const Navbar = () => {
   useEffect(() => {
     loadUser();
   }, []);
- console.log("Current User in Navbar:", user);
-  const displayName = user?.name|| user?.email?.split("@")[0] || "Guest";
+  
+  console.log("Current User in Navbar:", user);
+  
+  // Determine if the user is an admin
+  const isAdmin = user?.role === 'admin'; 
+  const displayName = user?.name || user?.email?.split("@")[0] || "Guest";
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 w-full sticky top-0 z-50">
@@ -56,13 +67,13 @@ const Navbar = () => {
               All Courses
             </button>
 
-            {/* Only show if logged in */}
+            {/* Conditional Link based on role */}
             {user && (
               <button
-                onClick={() => handleRedirect("/my-enrolled-course")}
+                onClick={() => handleRedirect(isAdmin ? "/admin" : "/my-enrolled-course")}
                 className="text-gray-700 hover:text-teal-600"
               >
-                My Enrolled Course
+                {isAdmin ? "Admin Dashboard" : "My Enrolled Course"}
               </button>
             )}
           </div>
@@ -95,21 +106,35 @@ const Navbar = () => {
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white shadow-md border rounded-md z-10 cursor-pointer">
 
+                    {/* Admin Dashboard Link */}
+                    {isAdmin && (
+                        <button
+                          onClick={() => handleRedirect("/admin")}
+                          className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-teal-600 font-semibold"
+                        >
+                          Admin Dashboard
+                        </button>
+                    )}
+
+                    {/* My Enrolled Courses (Only for regular users) */}
+                    {!isAdmin && (
+                        <button
+                          onClick={() => handleRedirect("/my-enrolled-course")}
+                          className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
+                        >
+                          My Enrolled Courses
+                        </button>
+                    )}
+                   
+                    {/* All Courses Link */}
                     <button
                       onClick={() => handleRedirect("/course")}
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 cursor-pointer"
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
                     >
                       All Courses
                     </button>
-
-                    <button
-                      onClick={() => handleRedirect("/my-enrolled-course")}
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 cursor-pointer"
-                    >
-                      My Enrolled Courses
-                    </button>
-
-                   
+                    
+                    {/* Logout */}
                     <button
                       onClick={handleLogout}
                       className="flex items-center w-full px-4 py-2 hover:bg-gray-100 text-gray-700"
@@ -124,13 +149,13 @@ const Navbar = () => {
               <>
                 <button
                   onClick={() => handleRedirect("/login")}
-                  className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 cursor-pointer"
+                  className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 cursor-pointer transition"
                 >
                   Login
                 </button>
                 <button
                   onClick={() => handleRedirect("/register")}
-                  className="px-4 py-2 border border-teal-600 text-teal-600 rounded-md hover:bg-teal-50 cursor-pointer"
+                  className="px-4 py-2 border border-teal-600 text-teal-600 rounded-md hover:bg-teal-50 cursor-pointer transition"
                 >
                   Register
                 </button>
@@ -160,12 +185,13 @@ const Navbar = () => {
             All Courses
           </button>
 
+          {/* Conditional Link based on role in Mobile Menu */}
           {user && (
             <button
-              onClick={() => handleRedirect("/my-enrolled-course")}
+              onClick={() => handleRedirect(isAdmin ? "/admin" : "/my-enrolled-course")}
               className="block py-2"
             >
-              My Enrolled Course
+              {isAdmin ? "Admin Dashboard" : "My Enrolled Course"}
             </button>
           )}
 
@@ -182,6 +208,7 @@ const Navbar = () => {
 
           {user && (
             <>
+              {/* Optional: Add Admin Dashboard link explicitly if needed, otherwise handled above */}
               <a href="/my-posts" className="block py-2">My Posts</a>
               <button onClick={handleLogout} className="block py-2 text-red-600 cursor-pointer">
                 Logout

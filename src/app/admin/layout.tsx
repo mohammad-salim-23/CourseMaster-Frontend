@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-
+import {  Home, HomeIcon } from "lucide-react";
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
@@ -80,11 +80,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <span className="text-xl">❓</span> 
               <span>Quiz Submissions</span>
             </Link>
+             <div className="mt-auto pt-80">
+              <Link href="/"
+              className="flex items-center space-x-3 text-lg font-medium p-3 rounded-lg transition duration-200 hover:bg-teal-700 hover:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50">
+                <span><HomeIcon/></span>
+              <span className="">Home</span>
+              </Link>
           </div>
-          
+          </div>
+         
         </nav>
+        
       </aside>
-
+           
       {/* Main content */}
       <main className="flex-1 bg-gray-100 p-8">{children}</main>
     </div>
