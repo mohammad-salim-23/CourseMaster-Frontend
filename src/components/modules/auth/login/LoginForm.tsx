@@ -37,9 +37,10 @@ const LoginForm = () => {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
       const res = await loginUser(data);
+      console.log("Login Response:", res);
       if (res?.success) {
         toast.success(res?.message || "Login successful");
-
+    
         router.push("/");
       } else {
         toast.error(res?.message || "Invalid credentials");

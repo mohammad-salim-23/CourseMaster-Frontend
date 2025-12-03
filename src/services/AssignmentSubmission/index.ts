@@ -1,10 +1,18 @@
 "use server";
+
+import { getToken } from "../AuthService";
+
 const BASE = process.env.NEXT_PUBLIC_BASE_API;
 // Submit assignment
 export async function submitAssignment(data: any) {
+  const token = await getToken();
   const res = await fetch(`${BASE}/assignment-submission`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json" ,
+      
+     Authorization: token
+  
+    },
     body: JSON.stringify(data),
   });
   return res.json();
@@ -12,12 +20,20 @@ export async function submitAssignment(data: any) {
 
 // Get submissions by module
 export async function getModuleSubmissions(moduleId: string) {
-  const res = await fetch(`${BASE}/assignment-submission/module/${moduleId}`);
+  const token = await getToken();
+  const res = await fetch(`${BASE}/assignment-submission/module/${moduleId}`,{
+     headers: { Authorization: token }
+  },
+   
+  );
   return res.json();
 }
 
 // Get submissions by user
 export async function getUserAssignmentSubmissions(userId: string) {
-  const res = await fetch(`${BASE}/assignment-submission/user/${userId}`);
+  const token = await getToken();
+  const res = await fetch(`${BASE}/assignment-submission/user/${userId}`,{
+     headers: { Authorization: token }
+  },);
   return res.json();
 }

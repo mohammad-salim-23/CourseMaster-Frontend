@@ -39,7 +39,7 @@ export const loginUser = async (userData: FieldValues) => {
         const result = await res.json()
 
         if (result?.success) {
-            (await cookies()).set("accessToken", result?.data?.token)
+            (await cookies()).set("accessToken", result?.data?.accessToken)
         }
 
         return result;
@@ -47,22 +47,28 @@ export const loginUser = async (userData: FieldValues) => {
         return Error(error)
     }
 }
-
 export const getCurrentUser = async () => {
     const accessToken = (await cookies()).get("accessToken")?.value;
     let decodedData = null;
-
-    if (accessToken) {
-        decodedData = await jwtDecode(accessToken);
-        return decodedData;
-    }
-    else {
-        return null
+    console.log("Access Token:", accessToken);
+     if (!accessToken) return null;
+ 
+    try {
+        const decoded = jwtDecode<any>(accessToken);
+        return {
+            email: decoded?.userEmail,
+            role: decoded?.role,
+            name: decoded?.name,
+        };
+    } catch (err) {
+        console.error("Invalid token:", err);
+        return null;
     }
 }
 
 
 
+export const getToken = async () => (await cookies()).get("accessToken")?.value || "";
 export const logout = async () => {
     (await cookies()).delete("accessToken");
 }

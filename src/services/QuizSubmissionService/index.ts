@@ -1,4 +1,7 @@
 "use server";
+
+import { getToken } from "../AuthService";
+
 const BASE = process.env.NEXT_PUBLIC_BASE_API;
 // Submit quiz
 export async function submitQuiz(data: any) {
@@ -12,6 +15,7 @@ export async function submitQuiz(data: any) {
 
 // Get results for a quiz for a user
 export async function getQuizResult(userId: string, quizId: string) {
+  const token = await getToken();
   const res = await fetch(`${BASE}/quiz-submission/user/${userId}/quiz/${quizId}`);
   return res.json();
 }

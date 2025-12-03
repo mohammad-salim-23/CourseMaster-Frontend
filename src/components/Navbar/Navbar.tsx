@@ -25,14 +25,15 @@ const Navbar = () => {
 
   const loadUser = async () => {
     const currentUser = await getCurrentUser();
+    console.log("Loaded Current User:", currentUser);
     setUser(currentUser);
   };
 
   useEffect(() => {
     loadUser();
   }, []);
-
-  const displayName = user?.firstName || user?.email?.split("@")[0] || "Guest";
+ console.log("Current User in Navbar:", user);
+  const displayName = user?.name|| user?.email?.split("@")[0] || "Guest";
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 w-full sticky top-0 z-50">
