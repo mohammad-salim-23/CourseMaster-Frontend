@@ -15,7 +15,11 @@ export async function getUserEnrollments(userId: string) {
   const res = await fetch(`${BASE}/enrollment/user/${userId}`);
   return res.json();
 }
-
+//Get all enrollments for admin
+export async function getAllEnrollments(){
+  const res = await fetch(`${BASE}/enrollment`);
+  return res.json();
+}
 // GET enrollment for user + course
 export async function getEnrollment(userId: string, courseId: string) {
   const res = await fetch(`${BASE}/enrollment/user/${userId}/course/${courseId}`);

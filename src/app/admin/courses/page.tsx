@@ -1,15 +1,27 @@
+"use client";
+
 import { getAllCourses } from "@/src/services/CourseService";
+import { useEffect, useState } from "react";
 
+export default function ManageCourses() {
+  const [courses, setCourses] = useState([]);
 
-export default async function ManageCourses() {
-  const courses = await getAllCourses();
+  useEffect(() => {
+    const loadData = async () => {
+      const res = await getAllCourses();
+      const json = await res.json();
+      setCourses(json.data); // store the array only
+    };
+
+    loadData();
+  }, []); 
 
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">📚 All Courses</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {courses?.data?.map((c: any) => (
+        {courses.map((c: any) => (
           <div key={c._id} className="p-4 bg-white rounded-lg shadow">
             <h2 className="text-xl font-semibold">{c.title}</h2>
             <p>{c.description}</p>
