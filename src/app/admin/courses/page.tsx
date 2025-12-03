@@ -1,4 +1,4 @@
-"use client";
+"use server";
 
 import { getAllCourses } from "@/src/services/CourseService";
 import { useEffect, useState } from "react";
