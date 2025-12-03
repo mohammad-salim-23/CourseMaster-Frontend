@@ -9,12 +9,11 @@ export default function ManageCourses() {
   useEffect(() => {
     const loadData = async () => {
       const res = await getAllCourses();
-    
-      setCourses(res.data); // store the array only
+      setCourses(res.data);
     };
 
     loadData();
-  }, []); 
+  }, []);
 
   return (
     <div>
@@ -22,31 +21,33 @@ export default function ManageCourses() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {courses.map((c: any) => (
-          <div key={c._id} className="p-4 bg-white rounded-lg shadow">
-            <h2 className="text-xl font-semibold">{c.title}</h2>
-            <p>{c.description}</p>
+          <div
+            key={c._id}
+            className="p-4 bg-white rounded-lg shadow flex flex-col justify-between"
+          >
+            <div>
+              <h2 className="text-xl font-semibold">{c.title}</h2>
+              <p className="mb-4">{c.description}</p>
+            </div>
 
-            <div className="mt-3 flex gap-2">
+            <div className="mt-auto flex gap-2">
+              
+              {/* Add Module */}
               <a
                 href={`/admin/courses/${c._id}/modules/create`}
-                className="px-2 py-1 text-sm bg-blue-500 text-white rounded"
+                className="px-3 py-2 text-sm bg-teal-600 hover:bg-teal-700 text-white rounded w-full text-center"
               >
                 Add Module
               </a>
 
+              {/* View Modules */}
               <a
-                href={`/admin/courses/${c._id}/modules/assignments/create`}
-                className="px-2 py-1 text-sm bg-green-600 text-white rounded"
+                href={`/admin/courses/${c._id}/modules`}
+                className="px-3 py-2 text-sm bg-gray-700 hover:bg-gray-800 text-white rounded w-full text-center"
               >
-                Add Assignment
+                View Modules
               </a>
 
-              <a
-                href={`/admin/courses/${c._id}/modules/quizzes/create`}
-                className="px-2 py-1 text-sm bg-purple-600 text-white rounded"
-              >
-                Add Quiz
-              </a>
             </div>
           </div>
         ))}
