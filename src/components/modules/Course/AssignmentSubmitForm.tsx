@@ -1,12 +1,24 @@
 "use client";
 import { useState } from "react";
+import { toast } from "sonner";
 
-export default function AssignmentSubmitForm({ assignmentId, moduleId }: { assignmentId: string, moduleId: string }) {
+
+export default function AssignmentSubmitForm({ assignmentId, moduleId, disabled }: { assignmentId: string, moduleId: string, disabled: boolean }) {
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
 
+ 
+  if (disabled) {
+    return (
+      <div className="p-3 bg-blue-100 text-blue-800 rounded mt-3">
+        Assignment already submitted.
+      </div>
+    );
+  }
+
   const onSubmit = async (e: any) => {
     e.preventDefault();
+    if (loading || disabled) return; // double check
     setLoading(true);
     try {
       const res = await fetch("/api/assignment-submission", {
@@ -17,9 +29,11 @@ export default function AssignmentSubmitForm({ assignmentId, moduleId }: { assig
       const json = await res.json();
       if (!res.ok) {
         if (res.status === 401) window.location.href = `/auth/login?next=window.location.pathname`;
+        // Alert will be replaced by a custom modal in a real app
+        toast(json?.message || "Submit failed");
         throw new Error(json?.message || "Submit failed");
       }
-      alert("Submitted successfully");
+      alert("Submitted successfully. Please refresh the page to see the updated status.");
     } catch (err: any) {
       alert(err.message || "Error");
     } finally {
@@ -28,10 +42,28 @@ export default function AssignmentSubmitForm({ assignmentId, moduleId }: { assig
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-2">
-      <textarea required value={answer} onChange={(e)=>setAnswer(e.target.value)} className="w-full border p-2 rounded" placeholder="Paste Google Drive link or write answer" />
+    <form onSubmit={onSubmit} className="space-y-2 mt-3">
+      <textarea 
+        required 
+        value={answer} 
+        onChange={(e)=>setAnswer(e.target.value)} 
+        className="w-full border p-2 rounded resize-none" 
+        placeholder="Paste Google Drive link or write answer" 
+        // disabled prop 
+        disabled={disabled || loading} 
+        rows={4}
+      />
       <div>
-        <button type="submit" disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded">
+        <button 
+          type="submit" 
+          // disabled prop 
+          disabled={loading || disabled} 
+          className={`px-4 py-2 text-white rounded transition ${
+            loading || disabled 
+            ? "bg-gray-500 cursor-not-allowed" 
+            : "bg-blue-600 hover:bg-blue-700"
+          }`}
+        >
           {loading ? "Submitting..." : "Submit Assignment"}
         </button>
       </div>

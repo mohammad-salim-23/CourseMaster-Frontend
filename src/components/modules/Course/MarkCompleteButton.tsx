@@ -2,11 +2,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function MarkCompleteButton({ enrollmentId, moduleId }: { enrollmentId: string, moduleId: string }) {
+
+export default function MarkCompleteButton({ enrollmentId, moduleId, disabled }: { enrollmentId: string, moduleId: string, disabled: boolean }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const onClick = async () => {
+   
+    if (loading || disabled) return;
+    
     setLoading(true);
     try {
       const res = await fetch("/api/enrollment/complete", {
@@ -20,7 +24,7 @@ export default function MarkCompleteButton({ enrollmentId, moduleId }: { enrollm
         throw new Error(json?.message || "Error");
       }
       if (json.success) {
-       
+        // Successfully marked complete, refresh the page to update status
         router.refresh(); 
       } else {
         alert(json.message || "Failed to mark complete");
@@ -33,8 +37,21 @@ export default function MarkCompleteButton({ enrollmentId, moduleId }: { enrollm
   };
 
   return (
-    <button disabled={loading} onClick={onClick} className="px-3 py-1 bg-green-600 text-white rounded">
-      {loading ? "Marking..." : "Mark Module Complete"}
+    <button 
+      // disabled prop 
+      disabled={loading || disabled} 
+      onClick={onClick} 
+      className={`px-6 py-3 text-lg font-semibold text-white rounded-lg transition-colors duration-200 ${
+        disabled 
+          ? "bg-gray-400 cursor-not-allowed" 
+          : "bg-green-600 hover:bg-green-700" 
+      }`}
+    >
+      {loading 
+        ? "Marking..." 
+        : disabled 
+          ? "Complete (Quiz/Assignment Pending)" 
+          : "Mark Module Complete ✅"}
     </button>
   );
 }

@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
 
-export default function QuizTake({ quiz }: { quiz: any }) {
+
+export default function QuizTake({ quiz, disabled }: { quiz: any, disabled: boolean }) {
 
   const [answers, setAnswers] = useState<{ [key:number]: string }>({});
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<any>(null); // কুইজ 
 
   const selectOption = (idx: number, option: string) => {
     setAnswers(prev => ({ ...prev, [idx]: option }));
@@ -13,8 +14,20 @@ export default function QuizTake({ quiz }: { quiz: any }) {
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
+    
+   
+    if (disabled || loading) return;
+
     setLoading(true);
+    
     try {
+    
+      if (Object.keys(answers).length !== quiz.questions.length) {
+        alert("Please answer all questions before submitting.");
+        setLoading(false);
+        return;
+      }
+
       const payload = {
         quizId: quiz._id,
         moduleId: quiz.module,
@@ -29,47 +42,85 @@ export default function QuizTake({ quiz }: { quiz: any }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+      
       const json = await res.json();
       if (!res.ok) throw new Error(json?.message || "Submit failed");
+      
       setResult(json.data || json);
+
+    
+
     } catch (err: any) {
-      alert(err.message || "Error");
+      alert(err.message || "Error submitting quiz.");
     } finally {
       setLoading(false);
     }
   };
 
+
+  const alreadySubmitted = disabled && !result; 
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">{quiz.title}</h3>
 
-      <form onSubmit={onSubmit} className="space-y-3">
-        {quiz.questions.map((q: any, idx: number) => (
-          <div key={idx} className="p-3 border rounded">
-            <p className="font-medium">{q.question}</p>
-            <div className="mt-2 space-y-1">
-              {q.options.map((opt: string) => (
-                <label key={opt} className="flex items-center gap-2">
-                  <input type="radio" name={`q-${idx}`} value={opt} onChange={()=>selectOption(idx,opt)} required />
-                  <span>{opt}</span>
-                </label>
-              ))}
-            </div>
+     
+      {alreadySubmitted && (
+          <div className="p-3 bg-blue-100 text-blue-800 rounded">
+              You have already submitted this quiz.
           </div>
-        ))}
+      )}
+      
+    
+      {!disabled && !result ? (
+        <form onSubmit={onSubmit} className="space-y-3">
+          {quiz.questions.map((q: any, idx: number) => (
+            <div key={idx} className="p-3 border rounded">
+              <p className="font-medium">{q.question}</p>
+              <div className="mt-2 space-y-1">
+                {q.options.map((opt: string) => (
+                  <label key={opt} className="flex items-center gap-2">
+                 
+                    <input 
+                      type="radio" 
+                      name={`q-${idx}`} 
+                      value={opt} 
+                      onChange={() => selectOption(idx, opt)} 
+                      required 
+                    />
+                    <span>{opt}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          ))}
 
-        <button type="submit" disabled={loading} className="px-4 py-2 bg-indigo-600 text-white rounded">{loading ? "Submitting..." : "Submit Quiz"}</button>
-      </form>
+          <button 
+            type="submit" 
+            disabled={loading || disabled} // disabled 
+            className={`px-4 py-2 text-white rounded transition ${
+              loading || disabled ? "bg-gray-500 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"
+            }`}
+          >
+            {loading ? "Submitting..." : "Submit Quiz"}
+          </button>
+        </form>
+      ) : (
+         
+          !alreadySubmitted && <p className="p-3 bg-green-100 text-green-800 rounded">Quiz result loading or available elsewhere.</p>
+      )}
 
+ 
       {result && (
         <div className="p-4 bg-green-50 rounded">
+          <h4 className="font-semibold text-green-700">Submission Result</h4>
           <p>Score: {result.score ?? result.data?.score}</p>
+          
           {/* show correctness */}
           {result.answers?.map((a: any, i: number) => (
             <div key={i} className="mt-2">
-              <div className="text-sm">{a.question}</div>
+              <div className="text-sm font-medium">{a.question}</div>
               <div className={`text-xs ${a.isCorrect ? "text-green-600" : "text-red-600"}`}>
-                Your answer: {a.selectedOption} — {a.isCorrect ? "Correct" : "Wrong"}
+                Your answer: **{a.selectedOption}** — {a.isCorrect ? "Correct ✅" : `Wrong ❌ (Correct: ${a.correctOption || 'N/A'})`}
               </div>
             </div>
           ))}
