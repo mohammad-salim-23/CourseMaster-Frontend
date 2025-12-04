@@ -6,7 +6,7 @@ const BASE = process.env.NEXT_PUBLIC_BASE_API;
 // Submit assignment
 export async function submitAssignment(data: any) {
   const token = await getToken();
-  const res = await fetch(`${BASE}/assignment-submission`, {
+  const res = await fetch(`${BASE}/assignment-submission/submit`, {
     method: "POST",
     headers: { "Content-Type": "application/json" ,
       

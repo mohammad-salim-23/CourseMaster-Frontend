@@ -1,4 +1,5 @@
 "use client";
+import { submitAssignment } from "@/src/services/AssignmentSubmission";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -18,24 +19,45 @@ export default function AssignmentSubmitForm({ assignmentId, moduleId, disabled 
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
-    if (loading || disabled) return; // double check
+    if (loading || disabled || !answer.trim()) {
+        if (!answer.trim()) toast.error("Answer cannot be empty.");
+        return; 
+    } 
+
+    const data = {
+        assignment: assignmentId,
+        module: moduleId, 
+        submissionType: "text",
+        answer: answer.trim(), 
+    };
+
     setLoading(true);
+    let json: any = null; // Initialize json variable
+    
     try {
-      const res = await fetch("/api/assignment-submission", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ assignment: assignmentId, module: moduleId, answer }),
-      });
-      const json = await res.json();
-      if (!res.ok) {
-        if (res.status === 401) window.location.href = `/auth/login?next=window.location.pathname`;
-        // toast will be replaced by a custom modal in a real app
-        toast(json?.message || "Submit failed");
-        throw new Error(json?.message || "Submit failed");
-      }
-      toast("Submitted successfully. Please refresh the page to see the updated status.");
+      
+        const res = await submitAssignment(data);
+        
+        // Response 
+        
+       console.log("Submission response:", res);
+        if (res.success===false) {
+            // Error handling (including 401 redirect)
+            if (res.status === 401) {
+                window.location.href = `/auth/login?next=${window.location.pathname}`;
+                return;
+            }
+            toast.error(json?.message || "Submission failed due to server error.");
+            throw new Error(json?.message || "Submit failed");
+        }
+
+        // Success
+        toast.success("Submitted successfully. Please refresh the page to see the updated status.");
+        setAnswer(""); // Clear the form on success
+        
     } catch (err: any) {
-      toast(err.message || "Error");
+      // Catch error from fetch or the thrown error
+      toast.error(err.message || "An unexpected error occurred during submission.");
     } finally {
       setLoading(false);
     }
@@ -47,7 +69,7 @@ export default function AssignmentSubmitForm({ assignmentId, moduleId, disabled 
         required 
         value={answer} 
         onChange={(e)=>setAnswer(e.target.value)} 
-        className="w-full border p-2 rounded resize-none" 
+        className="w-full border p-2 rounded resize-none focus:ring-teal-500 focus:border-teal-500 transition" 
         placeholder="Paste Google Drive link or write answer" 
         // disabled prop 
         disabled={disabled || loading} 
