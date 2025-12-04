@@ -63,7 +63,7 @@ const Navbar = () => {
               Home
             </button>
 
-            <button onClick={() => handleRedirect("/course")} className="text-gray-700 hover:text-teal-600 cursor-pointer">
+            <button onClick={() => handleRedirect("/all-courses")} className="text-gray-700 hover:text-teal-600 cursor-pointer">
               All Courses
             </button>
 
@@ -71,7 +71,7 @@ const Navbar = () => {
             {user && (
               <button
                 onClick={() => handleRedirect(isAdmin ? "/admin" : "/my-enrolled-course")}
-                className="text-gray-700 hover:text-teal-600"
+                className="text-gray-700 hover:text-teal-600 cursor-pointer"
               >
                 {isAdmin ? "Admin Dashboard" : "My Enrolled Course"}
               </button>
@@ -110,7 +110,7 @@ const Navbar = () => {
                     {isAdmin && (
                         <button
                           onClick={() => handleRedirect("/admin")}
-                          className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-teal-600 font-semibold"
+                          className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-teal-600 font-semibold cursor-pointer"
                         >
                           Admin Dashboard
                         </button>
@@ -128,8 +128,8 @@ const Navbar = () => {
                    
                     {/* All Courses Link */}
                     <button
-                      onClick={() => handleRedirect("/course")}
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
+                      onClick={() => handleRedirect("/all-courses")}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 cursor-pointer"
                     >
                       All Courses
                     </button>
@@ -137,7 +137,7 @@ const Navbar = () => {
                     {/* Logout */}
                     <button
                       onClick={handleLogout}
-                      className="flex items-center w-full px-4 py-2 hover:bg-gray-100 text-gray-700"
+                      className="flex items-center w-full px-4 py-2 hover:bg-gray-100 text-gray-700 cursor-pointer"
                     >
                       <LogOut className="mr-2 h-4 w-4 text-red-500" />
                       Logout

@@ -96,7 +96,7 @@ export default function AllCourse() {
       </div>
 
       {/* Course Grid */}
-      {/* Course Grid */}
+     
 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
   {courses.map((c: any) => (
     <div
