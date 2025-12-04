@@ -53,7 +53,7 @@ export default async function MyEnrollmentsPage() {
             </div>
 
             <div className="flex gap-2">
-              <a href={`/course/${en.course._id}`} className="px-3 py-2 bg-teal-600 text-white rounded">Open Course</a>
+              <a href={`/dashboard/enrollments/${en.course._id}`} className="px-3 py-2 bg-teal-600 text-white rounded">Open Course</a>
               <a href={`/course/${en.course._id}/modules`} className="px-3 py-2 bg-gray-200 rounded">Modules</a>
             </div>
           </div>
