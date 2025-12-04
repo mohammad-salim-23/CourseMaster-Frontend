@@ -12,7 +12,7 @@ export default async function MyEnrollmentsPage() {
     return (
       <div className="container mx-auto py-10">
         <h2 className="text-xl font-semibold">You are not logged in</h2>
-        <p>Please <a href="/auth/login" className="text-blue-600">login</a> to view your courses.</p>
+        <p>Please <a href="/auth/login" className="text-teal-600">login</a> to view your courses.</p>
       </div>
     );
   }
@@ -53,7 +53,7 @@ export default async function MyEnrollmentsPage() {
             </div>
 
             <div className="flex gap-2">
-              <a href={`/course/${en.course._id}`} className="px-3 py-2 bg-blue-600 text-white rounded">Open Course</a>
+              <a href={`/course/${en.course._id}`} className="px-3 py-2 bg-teal-600 text-white rounded">Open Course</a>
               <a href={`/course/${en.course._id}/modules`} className="px-3 py-2 bg-gray-200 rounded">Modules</a>
             </div>
           </div>

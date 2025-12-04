@@ -1,12 +1,15 @@
+"use server";
 import { getToken } from "../AuthService";
 
-const BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
-export async function enrollCourse(courseId: string, batchId: string) {
+const BASE = process.env.NEXT_PUBLIC_BASE_API;
+export async function enrollCourse(courseId: string) {
   const token = await getToken();
+  console.log("token....",token);
+ 
   const res = await fetch(`${BASE}/enrollment`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: token },
-    body: JSON.stringify({ course: courseId, batch: batchId }),
+    body: JSON.stringify({ course: courseId }),
   });
   return res.json();
 }
