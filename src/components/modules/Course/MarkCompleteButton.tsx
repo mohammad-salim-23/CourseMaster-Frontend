@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 
 export default function MarkCompleteButton({ enrollmentId, moduleId, disabled }: { enrollmentId: string, moduleId: string, disabled: boolean }) {
@@ -27,10 +28,10 @@ export default function MarkCompleteButton({ enrollmentId, moduleId, disabled }:
         // Successfully marked complete, refresh the page to update status
         router.refresh(); 
       } else {
-        alert(json.message || "Failed to mark complete");
+        toast(json.message || "Failed to mark complete");
       }
     } catch (err: any) {
-      alert(err.message || "Error");
+      toast(err.message || "Error");
     } finally {
       setLoading(false);
     }

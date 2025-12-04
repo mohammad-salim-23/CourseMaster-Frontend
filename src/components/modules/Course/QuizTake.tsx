@@ -1,12 +1,13 @@
 "use client";
 import { useState } from "react";
+import { toast } from "sonner";
 
 
 export default function QuizTake({ quiz, disabled }: { quiz: any, disabled: boolean }) {
 
   const [answers, setAnswers] = useState<{ [key:number]: string }>({});
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null); // কুইজ 
+  const [result, setResult] = useState<any>(null); 
 
   const selectOption = (idx: number, option: string) => {
     setAnswers(prev => ({ ...prev, [idx]: option }));
@@ -23,7 +24,7 @@ export default function QuizTake({ quiz, disabled }: { quiz: any, disabled: bool
     try {
     
       if (Object.keys(answers).length !== quiz.questions.length) {
-        alert("Please answer all questions before submitting.");
+        toast("Please answer all questions before submitting.");
         setLoading(false);
         return;
       }
@@ -51,7 +52,7 @@ export default function QuizTake({ quiz, disabled }: { quiz: any, disabled: bool
     
 
     } catch (err: any) {
-      alert(err.message || "Error submitting quiz.");
+      toast(err.message || "Error submitting quiz.");
     } finally {
       setLoading(false);
     }
@@ -65,7 +66,7 @@ export default function QuizTake({ quiz, disabled }: { quiz: any, disabled: bool
 
      
       {alreadySubmitted && (
-          <div className="p-3 bg-blue-100 text-blue-800 rounded">
+          <div className="p-3 bg-teal-100 text-teal-800 rounded">
               You have already submitted this quiz.
           </div>
       )}

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function EnrollButton({ courseId, batchId }: { courseId: string; batchId: string }) {
   const [loading, setLoading] = useState(false);
@@ -30,10 +31,10 @@ export default function EnrollButton({ courseId, batchId }: { courseId: string; 
         // success → go to My Enrolled Courses or dashboard
         router.push("/dashboard/enrollments");
       } else {
-        alert(json.message || "Enroll failed");
+        toast(json.message || "Enroll failed");
       }
     } catch (err: any) {
-      alert(err.message || "Enroll error");
+      toast(err.message || "Enroll error");
     } finally {
       setLoading(false);
     }

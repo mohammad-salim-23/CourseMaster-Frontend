@@ -67,7 +67,7 @@ export default function LessonsPage({ params }: any) {
               <h3 className="font-semibold">{l.title}</h3>
               <p className="text-sm text-gray-600">{l.videoUrl}</p>
             </div>
-            <p className={`text-xs font-medium px-2 py-1 rounded ${l.isFreePreview ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-500"}`}>
+            <p className={`text-xs font-medium px-2 py-1 rounded ${l.isFreePreview ? "bg-teal-100 text-teal-800" : "bg-gray-100 text-gray-500"}`}>
                 {l.isFreePreview ? "Free Preview" : "Locked"}
             </p>
           </div>

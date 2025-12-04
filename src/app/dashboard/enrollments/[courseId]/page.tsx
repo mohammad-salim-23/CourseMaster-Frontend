@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 export default function AllModulesSpecificCourse() {
   const params = useParams();
  
+ 
   const courseId = Array.isArray(params.courseId) ? params.courseId[0] : params.courseId; 
 
   const [modules, setModules] = useState<any[]>([]);
@@ -18,8 +19,9 @@ export default function AllModulesSpecificCourse() {
     try {
      
       const res = await fetch(`${BASE}/module/course/${courseId}`);
+      console.log("Modules response:", res);
       const data = await res.json();
-
+     
       setModules(data?.data || []);
       setLoading(false);
     } catch (error) {
@@ -62,7 +64,8 @@ export default function AllModulesSpecificCourse() {
                 className="bg-teal-600 text-white py-2 rounded hover:bg-teal-700 cursor-pointer"
                
                 onClick={() =>
-                  (window.location.href = `/dashboard/modules/${m._id}`)
+                 
+                  (window.location.href = `/dashboard/enrollments/${courseId}/module/${m._id}`)
                 }
               >
                 👀 View Details

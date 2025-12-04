@@ -10,7 +10,7 @@ export default function AssignmentSubmitForm({ assignmentId, moduleId, disabled 
  
   if (disabled) {
     return (
-      <div className="p-3 bg-blue-100 text-blue-800 rounded mt-3">
+      <div className="p-3 bg-teal-100 text-teal-800 rounded mt-3">
         Assignment already submitted.
       </div>
     );
@@ -29,13 +29,13 @@ export default function AssignmentSubmitForm({ assignmentId, moduleId, disabled 
       const json = await res.json();
       if (!res.ok) {
         if (res.status === 401) window.location.href = `/auth/login?next=window.location.pathname`;
-        // Alert will be replaced by a custom modal in a real app
+        // toast will be replaced by a custom modal in a real app
         toast(json?.message || "Submit failed");
         throw new Error(json?.message || "Submit failed");
       }
-      alert("Submitted successfully. Please refresh the page to see the updated status.");
+      toast("Submitted successfully. Please refresh the page to see the updated status.");
     } catch (err: any) {
-      alert(err.message || "Error");
+      toast(err.message || "Error");
     } finally {
       setLoading(false);
     }
@@ -61,7 +61,7 @@ export default function AssignmentSubmitForm({ assignmentId, moduleId, disabled 
           className={`px-4 py-2 text-white rounded transition ${
             loading || disabled 
             ? "bg-gray-500 cursor-not-allowed" 
-            : "bg-blue-600 hover:bg-blue-700"
+            : "bg-teal-600 hover:bg-teal-700"
           }`}
         >
           {loading ? "Submitting..." : "Submit Assignment"}

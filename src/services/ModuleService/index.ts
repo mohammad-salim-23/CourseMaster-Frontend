@@ -35,7 +35,14 @@ export async function getAllModules() {
   const res = await fetch(`${BASE}/module`);
   return res.json();
 }
-
+//getModuleDetails
+export async function getModuleDetails(id: string) {
+  const token = await getToken();
+  const res = await fetch(`${BASE}/module/${id}/details`, {
+    headers: { Authorization: token },
+  });
+  return res.json();
+}
 export async function getModulesByCourse(courseId: string) {
   const token = await getToken();
   const res = await fetch(`${BASE}/module/course/${courseId}`,{
