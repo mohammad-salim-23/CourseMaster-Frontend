@@ -33,7 +33,8 @@ export default function ModulePageClient({ params }: any) {
   const [quizzes, setQuizzes] = useState<any[]>([]);
   const [enrollmentId, setEnrollmentId] = useState<string | null>(null);
   const [assignmentSubmitted, setAssignmentSubmitted] = useState(false); // Defaulting to false
-  const [quizSubmitted, setQuizSubmitted] = useState(false); // Defaulting to false
+ const [quizSubmitted, setQuizSubmitted] = useState<{ [quizId: string]: boolean }>({});
+
   const [loading, setLoading] = useState(true);
  const [userId, setUserId] = useState("");
  const [completed, setCompleted] = useState(false);
@@ -155,8 +156,11 @@ export default function ModulePageClient({ params }: any) {
           {quizzes.length === 0 ? <p className="text-gray-500">No quizzes for this module.</p> : (
             quizzes.map((q: any) => (
               <div key={q._id} className="mb-6 p-4 border rounded-md bg-gray-50">
-                <QuizTake quiz={q} disabled={quizSubmitted} 
-                onSuccess = {()=>setQuizSubmitted(true)}
+                <QuizTake quiz={q} 
+                disabled={quizSubmitted[q._id] || false} 
+
+               onSuccess={() => setQuizSubmitted(prev => ({ ...prev, [q._id]: true }))}
+
                 />
               </div>
             ))

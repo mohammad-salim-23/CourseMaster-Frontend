@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { markModuleCompleted } from "@/src/services/EnrollmentService";
@@ -20,10 +20,15 @@ export default function MarkCompleteButton({
   isCompleted?: boolean;
 }) {
   const [loading, setLoading] = useState(false);
+  const [completedState, setCompletedState] = useState(isCompleted || false); // internal state
   const router = useRouter();
 
+  useEffect(() => {
+    setCompletedState(isCompleted || false); // sync with parent
+  }, [isCompleted]);
+
   const onClick = async () => {
-    if (loading || disabled) return;
+    if (loading || disabled || completedState) return;
 
     setLoading(true);
     try {
@@ -36,10 +41,11 @@ export default function MarkCompleteButton({
 
       if (!res.success) {
         toast.error(res.message || "Failed to mark module complete");
-        
         return;
       }
 
+      // Success → immediately disable button
+      setCompletedState(true);
       toast.success("Module marked complete!");
       router.refresh();
     } catch (err: any) {
@@ -51,14 +57,15 @@ export default function MarkCompleteButton({
 
   return (
     <button
-      disabled={loading || disabled || isCompleted}
+      disabled={loading || disabled || completedState}
       onClick={onClick}
-      className={`px-6 py-3 text-lg font-semibold text-white rounded-lg transition ${
-        disabled ? "bg-gray-400" : "bg-teal-600 hover:bg-teal-700"
+      className={`px-6 py-3 text-lg font-semibold text-white rounded-lg transition cursor-pointer ${
+        disabled || completedState ? "bg-gray-400" : "bg-teal-600 hover:bg-teal-700"
       }`}
     >
-      {isCompleted ? "Already Completed":
-      loading
+      {completedState
+        ? "Already Completed"
+        : loading
         ? "Marking..."
         : disabled
         ? "Complete (Quiz/Assignment Pending)"

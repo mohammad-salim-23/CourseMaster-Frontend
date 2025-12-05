@@ -5,7 +5,8 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("accessToken")?.value; 
   const role = request.cookies.get("role")?.value; // "admin" / "user"
-
+console.log("Middleware - Token:", token);
+console.log("Middleware - Role:", role);
   const { pathname } = request.nextUrl;
 
   // Public routes — always allow
@@ -31,7 +32,7 @@ export function middleware(request: NextRequest) {
     if (!token) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
-
+ 
     if (role !== "admin") {
       // Not authorized
       return NextResponse.redirect(new URL("/unauthorized", request.url));

@@ -26,7 +26,7 @@ const Navbar = () => {
     await logout(); 
     router.push("/login");
   };
-
+console.log("Current User in Navbar:", user);
   const isAdmin = user?.role === "admin";
   const displayName = user?.name || user?.email?.split("@")[0] || "Guest";
 

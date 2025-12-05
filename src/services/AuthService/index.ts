@@ -37,10 +37,19 @@ export const loginUser = async (userData: FieldValues) => {
         })
 
         const result = await res.json()
-
+       console.log("Login Result:", result);
         if (result?.success) {
+            const accessToken = result?.data?.accessToken;
             (await cookies()).set("accessToken", result?.data?.accessToken)
-             
+             if (accessToken) {
+                const decoded = jwtDecode<any>(accessToken);
+                const userRole = decoded?.role; 
+
+                if (userRole) {
+                   
+                    (await cookies()).set("role", userRole);
+                }
+            }
         }
 
         return result;

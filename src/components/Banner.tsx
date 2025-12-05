@@ -4,7 +4,7 @@ import * as React from "react";
 
 import Image from "next/image";
 
-import bannerImage from "../app/assets/images/edTechlogo1.jpg"; 
+import bannerImage from "../app/assets/images/edTechLogo3.jpg"; 
 
 import Link from "next/link";
 import NLButton from "@/components/ui/core/button/NlButton";

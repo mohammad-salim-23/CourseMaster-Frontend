@@ -100,7 +100,7 @@ export default function QuizTake({ quiz, disabled,onSuccess }: QuizTakeProps) {
           <button
             type="submit"
             disabled={loading}
-            className={`px-4 py-2 text-white rounded-lg transition ${
+            className={`px-4 py-2 text-white rounded-lg transition cursor-pointer ${
               loading ? "bg-gray-500 cursor-not-allowed" : "bg-teal-600 hover:bg-teal-700"
             }`}
           >

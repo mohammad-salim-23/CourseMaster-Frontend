@@ -81,7 +81,7 @@ export default function AssignmentSubmitForm({ assignmentId, moduleId, disabled 
           type="submit" 
           // disabled prop 
           disabled={loading || disabled} 
-          className={`px-4 py-2 text-white rounded transition ${
+          className={`px-4 py-2 text-white rounded transition cursor-pointer ${
             loading || disabled 
             ? "bg-gray-500 cursor-not-allowed" 
             : "bg-teal-600 hover:bg-teal-700"
