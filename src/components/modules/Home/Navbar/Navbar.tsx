@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { LogOut, LogIn, ChevronDown, Menu, Search, FileText } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { LogOut, LogIn, ChevronDown, Menu } from "lucide-react";
 
 import { getCurrentUser, logout } from "@/src/services/AuthService";
 import logo from "../../../../app/assets/images/logo1.png";
@@ -11,13 +11,14 @@ import avatar from "../../../../app/assets/images/Avatar.png";
 
 const Navbar = () => {
   const router = useRouter();
+  const pathname = usePathname();
 
-  const [user, setUser] = useState<any>(null); 
+  const [user, setUser] = useState<any>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleRedirect = (path: string) => {
-    setIsDropdownOpen(false); 
+    setIsDropdownOpen(false);
     setIsMobileMenuOpen(false);
     router.push(path);
   };
@@ -25,26 +26,30 @@ const Navbar = () => {
   const handleLogout = async () => {
     await logout();
     setUser(null);
-    setIsDropdownOpen(false);
-    setIsMobileMenuOpen(false);
     router.push("/login");
   };
 
   const loadUser = async () => {
     const currentUser = await getCurrentUser();
-    console.log("Loaded Current User:", currentUser);
     setUser(currentUser);
   };
 
   useEffect(() => {
     loadUser();
   }, []);
+
+  const isAdmin = user?.role === "admin";
+  const displayName =
+    user?.name || user?.email?.split("@")[0] || "Guest";
+
   
-  console.log("Current User in Navbar:", user);
-  
-  // Determine if the user is an admin
-  const isAdmin = user?.role === 'admin'; 
-  const displayName = user?.name || user?.email?.split("@")[0] || "Guest";
+  useEffect(() => {
+    if (!user) return; // Wait until user loads
+
+    if (pathname.startsWith("/admin") && !isAdmin) {
+      router.replace("/"); // redirect non-admin users
+    }
+  }, [user, pathname, isAdmin, router]);
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 w-full sticky top-0 z-50">
@@ -52,42 +57,41 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
 
           {/* LOGO */}
-          <div className="flex-shrink-0 cursor-pointer" onClick={() => handleRedirect("/")}>
+          <div
+            className="flex-shrink-0 cursor-pointer"
+            onClick={() => handleRedirect("/")}
+          >
             <Image src={logo} alt="Logo" width={65} height={16} />
           </div>
 
           {/* CENTER MENU (Desktop) */}
           <div className="hidden md:flex items-center space-x-8 ml-10">
 
-            <button onClick={() => handleRedirect("/")} className="text-gray-700 hover:text-teal-600 cursor-pointer">
+            <button
+              onClick={() => handleRedirect("/")}
+              className="text-gray-700 hover:text-teal-600 cursor-pointer"
+            >
               Home
             </button>
 
-            <button onClick={() => handleRedirect("/all-courses")} className="text-gray-700 hover:text-teal-600 cursor-pointer">
+            <button
+              onClick={() => handleRedirect("/all-courses")}
+              className="text-gray-700 hover:text-teal-600 cursor-pointer"
+            >
               All Courses
             </button>
 
-            {/* Conditional Link based on role */}
+            {/* Conditional Link */}
             {user && (
               <button
-                onClick={() => handleRedirect(isAdmin ? "/admin" : "/my-enrolled-course")}
+                onClick={() =>
+                  handleRedirect(isAdmin ? "/admin" : "/dashboard/enrollments")
+                }
                 className="text-gray-700 hover:text-teal-600 cursor-pointer"
               >
                 {isAdmin ? "Admin Dashboard" : "My Enrolled Course"}
               </button>
             )}
-          </div>
-
-          {/* SEARCH BAR (Desktop) */}
-          <div className="flex-1 max-w-md mx-6 hidden lg:block">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2 text-sm border rounded-full focus:ring-teal-500 bg-gray-50"
-              />
-            </div>
           </div>
 
           {/* RIGHT SIDE */}
@@ -98,42 +102,56 @@ const Navbar = () => {
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-lg"
                 >
-                  <Image src={avatar} alt="avatar" width={32} height={32} className="rounded-full" />
-                  <span className="hidden lg:block">{displayName}</span>
-                  <ChevronDown className={`transition ${isDropdownOpen ? "rotate-180" : ""}`} />
+                  <Image
+                    src={avatar}
+                    alt="avatar"
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                  <span className="hidden lg:block">
+                    {displayName}
+                  </span>
+                  <ChevronDown
+                    className={`transition ${
+                      isDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
                 </button>
 
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white shadow-md border rounded-md z-10 cursor-pointer">
 
-                    {/* Admin Dashboard Link */}
+                    {/* Admin Dashboard */}
                     {isAdmin && (
-                        <button
-                          onClick={() => handleRedirect("/admin")}
-                          className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-teal-600 font-semibold cursor-pointer"
-                        >
-                          Admin Dashboard
-                        </button>
+                      <button
+                        onClick={() => handleRedirect("/admin")}
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-teal-600 font-semibold cursor-pointer"
+                      >
+                        Admin Dashboard
+                      </button>
                     )}
 
-                    {/* My Enrolled Courses (Only for regular users) */}
+                    {/* My Enrolled Courses (User only) */}
                     {!isAdmin && (
-                        <button
-                          onClick={() => handleRedirect("/my-enrolled-course")}
-                          className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
-                        >
-                          My Enrolled Courses
-                        </button>
+                      <button
+                        onClick={() =>
+                          handleRedirect("/dashboard/enrollments")
+                        }
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
+                      >
+                        My Enrolled Courses
+                      </button>
                     )}
-                   
-                    {/* All Courses Link */}
+
+                    {/* All Courses */}
                     <button
                       onClick={() => handleRedirect("/all-courses")}
                       className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 cursor-pointer"
                     >
                       All Courses
                     </button>
-                    
+
                     {/* Logout */}
                     <button
                       onClick={handleLogout}
@@ -177,18 +195,23 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden border-t p-4 bg-white">
 
-          <button onClick={() => handleRedirect("/")} className="block py-2 cursor-pointer">
+          <button onClick={() => handleRedirect("/")} className="block py-2">
             Home
           </button>
 
-          <button onClick={() => handleRedirect("/course")} className="block py-2 cursor-pointer">
+          <button
+            onClick={() => handleRedirect("/all-courses")}
+            className="block py-2"
+          >
             All Courses
           </button>
 
-          {/* Conditional Link based on role in Mobile Menu */}
+          {/* Conditional Role Link */}
           {user && (
             <button
-              onClick={() => handleRedirect(isAdmin ? "/admin" : "/my-enrolled-course")}
+              onClick={() =>
+                handleRedirect(isAdmin ? "/admin" : "/dashboard/enrollments")
+              }
               className="block py-2"
             >
               {isAdmin ? "Admin Dashboard" : "My Enrolled Course"}
@@ -197,10 +220,16 @@ const Navbar = () => {
 
           {!user && (
             <>
-              <button onClick={() => handleRedirect("/login")} className="block py-2 text-teal-600 cursor-pointer">
+              <button
+                onClick={() => handleRedirect("/login")}
+                className="block py-2 text-teal-600"
+              >
                 Login
               </button>
-              <button onClick={() => handleRedirect("/register")} className="block py-2 text-teal-600 cursor-pointer">
+              <button
+                onClick={() => handleRedirect("/register")}
+                className="block py-2 text-teal-600"
+              >
                 Register
               </button>
             </>
@@ -208,9 +237,10 @@ const Navbar = () => {
 
           {user && (
             <>
-              {/* Optional: Add Admin Dashboard link explicitly if needed, otherwise handled above */}
-              <a href="/my-posts" className="block py-2">My Posts</a>
-              <button onClick={handleLogout} className="block py-2 text-red-600 cursor-pointer">
+              <button
+                onClick={handleLogout}
+                className="block py-2 text-red-600"
+              >
                 Logout
               </button>
             </>
