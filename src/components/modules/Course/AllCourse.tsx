@@ -33,7 +33,7 @@ export default function AllCourse() {
       if (res?.success) {
         toast("Enrolled Successfully!");
       
-        // এনরোলমেন্ট সফল হলে লোকাল স্টেটে কোর্সটি যুক্ত করুন
+       
         setUserEnrollments(prev => new Set(prev).add(courseId)); 
         window.location.href = "/dashboard/enrollments";
       } else {
