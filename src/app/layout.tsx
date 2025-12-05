@@ -1,14 +1,33 @@
-import Navbar from "@/src/components/modules/Home/Navbar/Navbar";
-import { UserProvider } from "@/src/UserContext";
-import React from "react";
-const CommonLayout = ({children}:{children: React.ReactNode})=>{
-    return(
-        <>
+
+import type { Metadata } from "next";
+import "./globals.css"; 
+import { UserProvider } from "../UserContext";
+import Navbar from "../components/modules/Home/Navbar/Navbar";
+
+
+export const metadata: Metadata = {
+  title: "CourseMaster Frontend",
+  description: "..."
+};
+
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+     
+      <body>
+        
         <UserProvider>
-       <Navbar/>
-        <main className="min-h-screen">{children}</main>
+          <Navbar/>
+          <main className="min-h-screen">
+            {children}
+          </main>
         </UserProvider>
-        </>
-    )
+      </body>
+    </html>
+  );
 }
-export default CommonLayout;
