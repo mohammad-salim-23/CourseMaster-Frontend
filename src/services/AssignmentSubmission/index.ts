@@ -28,7 +28,14 @@ export async function getModuleSubmissions(moduleId: string) {
   );
   return res.json();
 }
-
+//get all submissions
+export async function getAllAssignmentSubmissions() {
+  const token = await getToken();
+  const res = await fetch(`${BASE}/assignment-submission`,{
+     headers: { Authorization: token }
+  },);
+  return res.json();
+}
 // Get submissions by user
 export async function getUserAssignmentSubmissions(userId: string) {
   const token = await getToken();

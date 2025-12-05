@@ -24,7 +24,15 @@ export async function getQuizResult(userId: string, quizId: string) {
   );
   return res.json();
 }
-
+//Get all quiz submissions
+export async function getAllQuizSubmissions(){
+  const token = await getToken();
+  const res = await fetch(`${BASE}/quiz-submission/all`,
+    { headers: { Authorization: token } }
+  );
+  return res.json();
+  
+}
 // Get all quiz submissions of a user
 export async function getUserQuizSubmissions(userId: string) {
   const token  = await getToken();

@@ -9,8 +9,8 @@ export default function EnrolledStudents() {
   useEffect(() => {
     const loadData = async () => {
       const res = await getAllEnrollments();
-      const json = await res.json();
-      setData(json.data);
+     
+      setData(res.data);
     };
 
     loadData();
