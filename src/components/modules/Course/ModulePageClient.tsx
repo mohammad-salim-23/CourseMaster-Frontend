@@ -35,8 +35,8 @@ export default function ModulePageClient({ params }: any) {
   const [assignmentSubmitted, setAssignmentSubmitted] = useState(false); // Defaulting to false
   const [quizSubmitted, setQuizSubmitted] = useState(false); // Defaulting to false
   const [loading, setLoading] = useState(true);
-
-
+ const [userId, setUserId] = useState("");
+ const [completed, setCompleted] = useState(false);
   useEffect(() => {
     const loadModuleData = async () => {
       if (!moduleId) {
@@ -67,6 +67,8 @@ export default function ModulePageClient({ params }: any) {
           setEnrollmentId(data.enrollmentId || null);
           setAssignmentSubmitted(data.assignmentSubmitted || false);
           setQuizSubmitted(data.quizSubmitted || false);
+          setUserId(data.userId);
+          setCompleted(data.completed || false);
         } else {
             console.error("Failed to load module details:", res.message);
         }
@@ -140,6 +142,7 @@ export default function ModulePageClient({ params }: any) {
                   moduleId={module._id}
                   // Assuming logic to check if *this specific* assignment is submitted
                   disabled={assignmentSubmitted} 
+                  onSuccess ={()=>setAssignmentSubmitted(true)}
                 />
               </div>
             ))
@@ -152,7 +155,9 @@ export default function ModulePageClient({ params }: any) {
           {quizzes.length === 0 ? <p className="text-gray-500">No quizzes for this module.</p> : (
             quizzes.map((q: any) => (
               <div key={q._id} className="mb-6 p-4 border rounded-md bg-gray-50">
-                <QuizTake quiz={q} disabled={quizSubmitted} />
+                <QuizTake quiz={q} disabled={quizSubmitted} 
+                onSuccess = {()=>setQuizSubmitted(true)}
+                />
               </div>
             ))
           )}
@@ -160,12 +165,15 @@ export default function ModulePageClient({ params }: any) {
       </section>
 
       {/* Completion Button */}
-      <div className="mt-10 pt-4 border-t flex justify-center">
+      <div className="mt-10 pt-4 border-t flex justify-center cursor-pointer">
         <MarkCompleteButton
-          enrollmentId={enrollmentId}
-          moduleId={module._id}
-          // The button is enabled only if both flags are true
-          disabled={!(assignmentSubmitted && quizSubmitted)} 
+       
+      userId={userId}        
+  courseId={courseId}
+  enrollmentId={enrollmentId!}
+  moduleId={module._id}
+  isCompleted={completed}
+  disabled={completed ||!(assignmentSubmitted || quizSubmitted)}
         />
       </div>
     </div>

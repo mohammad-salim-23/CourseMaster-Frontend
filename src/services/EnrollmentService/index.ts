@@ -14,12 +14,17 @@ export async function enrollCourse(courseId: string) {
   return res.json();
 }
 
-export async function markModuleCompleted(enrollmentId: string, moduleId: string) {
+export async function markModuleCompleted(payload: {
+  userId: string;
+  courseId: string;
+  enrollmentId: string;
+  moduleId: string;
+}) {
   const token = await getToken();
   const res = await fetch(`${BASE}/enrollment/complete-module`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: token },
-    body: JSON.stringify({ enrollmentId, moduleId }),
+    body: JSON.stringify(payload),
   });
   return res.json();
 }

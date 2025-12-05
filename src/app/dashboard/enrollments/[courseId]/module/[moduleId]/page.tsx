@@ -1,4 +1,4 @@
-import ModulesPage from "@/src/app/admin/courses/[courseId]/modules/page";
+
 import ModulePageClient from "@/src/components/modules/Course/ModulePageClient";
 
 interface PageProps {

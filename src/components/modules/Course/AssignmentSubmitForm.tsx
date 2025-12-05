@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 
-export default function AssignmentSubmitForm({ assignmentId, moduleId, disabled }: { assignmentId: string, moduleId: string, disabled: boolean }) {
+export default function AssignmentSubmitForm({ assignmentId, moduleId, disabled ,onSuccess}: { assignmentId: string, moduleId: string, disabled: boolean, onSuccess?: () => void }) {
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -53,6 +53,7 @@ export default function AssignmentSubmitForm({ assignmentId, moduleId, disabled 
 
         // Success
         toast.success("Submitted successfully. Please refresh the page to see the updated status.");
+        if (onSuccess) onSuccess();
         setAnswer(""); // Clear the form on success
         
     } catch (err: any) {

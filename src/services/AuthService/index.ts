@@ -40,6 +40,7 @@ export const loginUser = async (userData: FieldValues) => {
 
         if (result?.success) {
             (await cookies()).set("accessToken", result?.data?.accessToken)
+             
         }
 
         return result;

@@ -7,9 +7,10 @@ import { toast } from "sonner";
 interface QuizTakeProps {
   quiz: any; 
   disabled: boolean; 
+  onSuccess?:()=>void;
 }
 
-export default function QuizTake({ quiz, disabled }: QuizTakeProps) {
+export default function QuizTake({ quiz, disabled,onSuccess }: QuizTakeProps) {
   
   const questions = quiz.questions || [];
 
@@ -55,6 +56,7 @@ export default function QuizTake({ quiz, disabled }: QuizTakeProps) {
 
       setResult(res.data);
       toast.success("Quiz submitted successfully!");
+      if(onSuccess) onSuccess();
     } catch (err: any) {
       toast(err.message || "Error submitting quiz.");
     } finally {

@@ -19,7 +19,8 @@ import Image from "next/image";
 import logo from "../../../../app/assets/images/logo1.png";
 import { loginUser } from "@/src/services/AuthService";
 import NLButton from "@/components/ui/core/button/NlButton";
-
+import { useUser } from "@/src/UserContext";
+ 
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -29,7 +30,7 @@ const loginSchema = z.object({
 const LoginForm = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-
+ const {reloadUser} = useUser();
   const form = useForm({
     resolver: zodResolver(loginSchema),
   });
@@ -40,7 +41,7 @@ const LoginForm = () => {
       console.log("Login Response:", res);
       if (res?.success) {
         toast.success(res?.message || "Login successful");
-    
+        await reloadUser();
         router.push("/");
       } else {
         toast.error(res?.message || "Invalid credentials");
