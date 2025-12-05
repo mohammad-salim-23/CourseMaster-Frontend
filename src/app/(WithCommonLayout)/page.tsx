@@ -1,12 +1,10 @@
 import Banner from "@/src/components/Banner";
 import LatestCourse from "@/src/components/modules/Home/LatestCourse/LatestCourse";
 import Image from "next/image";
-import Navbar from "../components/modules/Home/Navbar/Navbar";
 
 export default function Home() {
   return (
     <div className="">
-      <Navbar></Navbar>
       <Banner></Banner>
       <LatestCourse></LatestCourse>
     </div>
